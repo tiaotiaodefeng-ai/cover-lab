@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PartyKeys Cover Lab</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans SC", sans-serif;
+      background: #07070a;
+      color: #f8f7fb;
+    }
+    * { box-sizing: border-box; }
+    html { background: #07070a; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 78% -12%, rgba(72, 54, 182, .25), transparent 36rem),
+        radial-gradient(circle at 0% 54%, rgba(0, 120, 190, .12), transparent 28rem),
+        #07070a;
+    }
+    button { font: inherit; color: inherit; }
+    .lab {
+      width: min(1720px, 100%);
+      margin: 0 auto;
+      padding: clamp(22px, 4vw, 58px);
+    }
+    .top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+    .eyebrow {
+      color: #928ba8;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .22em;
+    }
+    h1 {
+      margin: 10px 0 0;
+      max-width: 780px;
+      font-size: clamp(36px, 6vw, 78px);
+      line-height: .92;
+      letter-spacing: -.07em;
+    }
+    .intro {
+      max-width: 760px;
+      margin: 16px 0 0;
+      color: #928f9d;
+      font-size: 15px;
+      line-height: 1.72;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, auto);
+      gap: 10px;
+    }
+    .stats span {
+      min-width: 118px;
+      padding: 13px 15px;
+      border: 1px solid rgba(151, 143, 255, .14);
+      border-radius: 8px;
+      background: rgba(18, 18, 27, .74);
+      color: #908c9d;
+      font-size: 11px;
+      font-weight: 850;
+      box-shadow: inset 0 1px rgba(255,255,255,.05);
+    }
+    .stats b {
+      display: block;
+      color: #fff;
+      font-size: 23px;
+      letter-spacing: -.04em;
+    }
+    .filters {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      display: flex;
+      gap: 9px;
+      padding: 12px 0 20px;
+      margin-bottom: 10px;
+      overflow-x: auto;
+      background: linear-gradient(180deg, #07070a 0%, rgba(7, 7, 10, .88) 72%, transparent);
+      backdrop-filter: blur(16px);
+      scrollbar-width: none;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .filters button {
+      flex: 0 0 auto;
+      min-height: 38px;
+      padding: 0 15px;
+      border: 1px solid rgba(151, 143, 255, .17);
+      border-radius: 999px;
+      background: rgba(21, 20, 32, .74);
+      color: #aaa5b6;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .filters button.active {
+      color: #fff;
+      border-color: rgba(255,255,255,.24);
+      background: linear-gradient(135deg, rgba(239,109,168,.28), rgba(90,120,255,.24));
+      box-shadow: 0 0 34px rgba(239,109,168,.11);
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      margin: -2px 0 18px;
+    }
+    .modes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .modes button {
+      min-height: 34px;
+      padding: 0 13px;
+      border: 1px solid rgba(151, 143, 255, .14);
+      border-radius: 8px;
+      background: rgba(18, 18, 27, .72);
+      color: #9d98aa;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 850;
+    }
+    .modes button.active {
+      color: #fff;
+      border-color: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.1);
+    }
+    .health {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: #8f8a9b;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .health span {
+      padding: 8px 10px;
+      border: 1px solid rgba(151, 143, 255, .12);
+      border-radius: 8px;
+      background: rgba(16, 16, 24, .64);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: clamp(14px, 1.45vw, 23px);
+    }
+    .grid.review {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+    .grid.small {
+      grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      min-width: 0;
+      padding: 9px;
+      border: 1px solid rgba(151, 143, 255, .12);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(20, 20, 30, .78), rgba(13, 13, 19, .8));
+      box-shadow: 0 24px 64px rgba(0,0,0,.2);
+    }
+    .cover {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 7px;
+      background: #14141c;
+      isolation: isolate;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.09);
+    }
+    .cover svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .asset-cover {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(var(--field-angle), transparent 0 52%, color-mix(in srgb, var(--accent), transparent 76%) 52% 100%),
+        radial-gradient(circle at var(--glow-x) var(--glow-y), color-mix(in srgb, var(--accent2), transparent 70%), transparent 46%),
+        var(--bg);
+    }
+    .asset-cover::before,
+    .asset-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+    .asset-cover::before {
+      opacity: var(--pattern-opacity);
+      background-image:
+        radial-gradient(circle, color-mix(in srgb, var(--ink), transparent 16%) 0 1px, transparent 1.45px);
+      background-size: var(--dot-size) var(--dot-size);
+      mask-image: linear-gradient(var(--field-angle), #000, transparent 76%);
+    }
+    .asset-cover::after {
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.14), transparent 28%),
+        linear-gradient(315deg, rgba(255,255,255,.08), transparent 46%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.22);
+    }
+    .asset-shape {
+      position: absolute;
+      z-index: 2;
+      left: var(--shape-x);
+      top: var(--shape-y);
+      width: var(--shape-size);
+      height: var(--shape-size);
+      background: linear-gradient(
+        135deg,
+        var(--shape-color) 0%,
+        color-mix(in srgb, var(--shape-color) 72%, var(--bg) 28%) 100%
+      );
+      opacity: var(--shape-opacity);
+      -webkit-mask: var(--asset-url) center / contain no-repeat;
+      mask: var(--asset-url) center / contain no-repeat;
+      filter: drop-shadow(0 12px 22px rgba(25,18,46,.14));
+      transform: translate(-50%, -50%) rotate(var(--shape-rotate));
+      transform-origin: center;
+      mix-blend-mode: normal;
+    }
+    .asset-shape.echo {
+      z-index: 1;
+      background: var(--echo-color);
+      opacity: var(--echo-opacity);
+      filter: none;
+      transform: translate(-50%, -50%) rotate(calc(var(--shape-rotate) + var(--echo-rotate))) scale(var(--echo-scale));
+      mix-blend-mode: var(--echo-blend);
+    }
+    .caption {
+      padding: 11px 3px 3px;
+      display: grid;
+      gap: 5px;
+    }
+    .caption strong {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      letter-spacing: -.03em;
+    }
+    .caption span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #858190;
+      font-size: 11px;
+      line-height: 1.2;
+    }
+    .caption code {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #ef8ec0;
+      font-size: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .quality {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .quality i {
+      display: inline-flex;
+      align-items: center;
+      height: 17px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      color: #bdb7c9;
+      font-style: normal;
+      font-size: 9px;
+      font-weight: 900;
+    }
+    .quality .ok { color: #a6f0c7; background: rgba(77, 214, 128, .13); }
+    .quality .warn { color: #ffd28b; background: rgba(255, 184, 79, .14); }
+    .grid.small .card {
+      padding: 5px;
+      border-radius: 9px;
+    }
+    .grid.small .caption {
+      padding: 6px 1px 1px;
+      gap: 2px;
+    }
+    .grid.small .caption span,
+    .grid.small .caption code,
+    .grid.small .quality {
+      display: none;
+    }
+    .grid.small .caption strong {
+      font-size: 10px;
+    }
+    @media (max-width: 760px) {
+      .top { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(3, 1fr); }
+      .stats span { min-width: 0; padding: 11px; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); }
+      .lab { padding: 24px 16px 44px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="lab">
+    <section class="top">
+      <div>
+        <div class="eyebrow">PARTYKEYS COVER SYSTEM LAB</div>
+        <h1>稳定生成的歌曲封面墙</h1>
+        <p class="intro">方向：用真实 SVG 图形资产池生成封面。每个“歌曲版本/谱面”稳定选择一个抽象 shape，再通过配色、尺度和背景层做封面化；同一版本刷新不变，大曲库里也能保持统一但不套模板。</p>
+      </div>
+      <div class="stats">
+        <span><b id="totalCount">120</b>封面数量</span>
+        <span><b id="assetCount">49</b>可用资产</span>
+        <span><b id="systemVersion">v3</b>系统版本</span>
+      </div>
+    </section>
+    <nav class="filters" id="filters"></nav>
+    <section class="toolbar">
+      <div class="modes" id="modes"></div>
+      <div class="health" id="health"></div>
+    </section>
+    <section class="grid" id="grid"></section>
+  </main>
+
+  <script>
+    const COVER_SYSTEM_VERSION = 3;
+    const modes = [
+      { id: "wall", label: "120 张墙" },
+      { id: "review", label: "10 张评审" },
+      { id: "small", label: "小尺寸检查" }
+    ];
+    const disabledAssets = new Set([
+      // 素材进入正式曲库前，可以把缩小后识别差或气质不对的 SVG 放进这里。
+    ]);
+    const baseSongs = [
+      ["晴天","周杰伦","流行",86,"C"],["想见你想见你想见你","八三夭","流行",128,"G"],["晚风心里吹","阿梨粤","抒情",92,"D"],["一路向北","周杰伦","怀旧",76,"A"],["如果可以","韦礼安","抒情",80,"E"],["刻在我心底的名字","卢广仲","抒情",72,"F"],["唯一","告五人","流行",84,"D"],["小幸运","田馥甄","流行",96,"G"],["起风了","买辣椒也用券","流行",88,"C"],["后来","刘若英","怀旧",74,"F"],["修炼爱情","林俊杰","抒情",82,"E"],["红色高跟鞋","蔡健雅","流行",112,"A"],["成都","赵雷","民谣",68,"C"],["海阔天空","Beyond","摇滚",90,"E"],["至少还有你","林忆莲","怀旧",70,"D"],["那些年","胡夏","校园",78,"G"],["遇见","孙燕姿","流行",76,"F"],["光年之外","邓紫棋","电子",128,"B"],["有何不可","许嵩","流行",100,"C"],["安静","周杰伦","抒情",66,"G"],["平凡之路","朴树","民谣",90,"A"],["我怀念的","孙燕姿","抒情",72,"D"],["慢慢喜欢你","莫文蔚","抒情",68,"C"],["漂洋过海来看你","李宗盛","怀旧",73,"F"],["盛夏光年","五月天","摇滚",142,"D"],["突然好想你","五月天","摇滚",82,"A"],["稻香","周杰伦","校园",92,"G"],["日不落","蔡依林","流行",126,"F"],["玫瑰少年","蔡依林","电子",118,"C"],["南山南","马頔","民谣",64,"D"]
+    ];
+    const suffix = ["夜航","春日","无眠","海岸","霓虹","回声","风景","微光","心跳","月台","热浪","旧梦","蓝调","漫游","星河","雨季","午后","北站","复写","长街"];
+    const filters = ["全部","抒情","流行","怀旧","民谣","摇滚","电子","校园"];
+    const sampleSize = 120;
+    const versionTags = ["原版", "简单", "困难", "女生调", "演出版"];
+    const difficulties = ["普通", "简单", "困难", "专家"];
+    const songs = Array.from({ length: sampleSize }, (_, i) => {
+      const s = baseSongs[i % baseSongs.length];
+      const round = Math.floor(i / baseSongs.length);
+      const versionTag = round ? versionTags[(i + round) % versionTags.length] : "原版";
+      const difficulty = difficulties[(i * 3 + round) % difficulties.length];
+      return {
+        id: `song-${1000 + i}`,
+        chartId: `PK-${String(1000 + i).padStart(5, "0")}`,
+        catalogIndex: i,
+        title: round ? `${s[0]} · ${suffix[(i + round) % suffix.length]}` : s[0],
+        artist: s[1],
+        versionTag,
+        difficulty,
+        mood: s[2],
+        bpm: Math.max(58, s[3] + ((i * 7) % 21) - 10),
+        key: s[4]
+      };
+    });
+
+    const palettes = {
+      "抒情": [
+        ["#0f4fc7","#dce8ff","#7dc7ff","#08295f","#f4bdcf"],
+        ["#f2b4ce","#17316d","#fff2dc","#d74f7d","#7fd4b2"],
+        ["#0c675f","#d8fff2","#78cdb7","#073934","#f4c76b"],
+        ["#eef0d8","#1b5c9e","#ff91a8","#0e2434","#8bd9ff"]
+      ],
+      "流行": [
+        ["#075ce8","#ff7a2f","#fff3c4","#051f5f","#23d183"],
+        ["#6d22c9","#43d36b","#f7f0ff","#2e0b70","#ff6a93"],
+        ["#ff4b3e","#113bca","#ffe25f","#681229","#6ff0cf"],
+        ["#00a6a6","#f9cc33","#f25f5c","#073b4c","#f6f7eb"]
+      ],
+      "怀旧": [
+        ["#9a5b21","#f2c46b","#fff0c9","#4d2509","#b7332f"],
+        ["#bf3b32","#e7d8a5","#1f3e52","#5c241e","#f4a85f"],
+        ["#7a4f24","#d7b35f","#283f36","#fff1c8","#c3523a"],
+        ["#223047","#d4a24a","#f4e4c2","#8f2f2b","#6b7d4a"]
+      ],
+      "民谣": [
+        ["#144a3b","#d8d0a6","#79b47a","#092c24","#e9a95f"],
+        ["#315438","#f3e7bd","#9bc48f","#60391e","#d95f43"],
+        ["#596b2f","#f0dfa8","#b6c777","#2d3518","#d68745"],
+        ["#2b6252","#ecd7ab","#7fc1a0","#0f3028","#c65f4b"]
+      ],
+      "摇滚": [
+        ["#111111","#ff3d2e","#f4eee0","#4b0808","#2468ff"],
+        ["#1a1430","#ef2f59","#f0e9dd","#070710","#ff9d24"],
+        ["#061520","#d71920","#e7eef4","#0a0909","#00a7c7"],
+        ["#2b1010","#f04b24","#f3dfb5","#090606","#9d1f3f"]
+      ],
+      "电子": [
+        ["#090a23","#50f4ff","#b34dff","#1c1266","#fff65a"],
+        ["#150033","#00f0a8","#ff4fd8","#4c0fc2","#f7f7ff"],
+        ["#071f3d","#33ddff","#fbff35","#075a81","#f8487f"],
+        ["#120a34","#8b5cff","#31e981","#03020d","#ffb84f"]
+      ],
+      "校园": [
+        ["#2a63d5","#fff4ba","#71d66f","#0d2c77","#ff7f94"],
+        ["#00a7d8","#ffdd57","#f8f6ec","#07526a","#ef476f"],
+        ["#1d8f65","#f5e86c","#a2d8ff","#06422f","#ff7d45"],
+        ["#6854cf","#f7ef8a","#85d7f2","#24146d","#ff8ab3"]
+      ]
+    };
+    const fallbackPalettes = palettes["流行"];
+    const fields = ["整色", "竖切", "横切", "斜切", "角块", "偏心窗", "双栏", "底座", "边栏"];
+    const focals = ["留白", "越界圆", "方框", "重块", "阶梯", "拱门", "切片", "十字轴", "唱片孔"];
+    const routes = ["无路径", "弧线路径", "波线路径", "折线路径", "双轨路径", "放射路径", "切线", "框线路径"];
+    const rhythms = ["静默", "短柱", "点阵", "刻度", "横条", "竖条", "阶码", "小窗"];
+
+    function hash(input) {
+      let h = 2166136261;
+      for (let i = 0; i < input.length; i++) {
+        h ^= input.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+    function normalizeKeyPart(value) {
+      return String(value ?? "")
+        .trim()
+        .toLowerCase()
+        .replace(/[（(]\s*/g, "(")
+        .replace(/\s*[）)]/g, ")")
+        .replace(/\s+/g, " ");
+    }
+    function stableCoverKey(song) {
+      return [
+        `cover-system-v${COVER_SYSTEM_VERSION}`,
+        normalizeKeyPart(song.title),
+        normalizeKeyPart(song.artist),
+        normalizeKeyPart(song.versionTag || song.difficulty || "default"),
+        normalizeKeyPart(song.chartId || song.arrangementId || song.difficulty || "no-chart")
+      ].join("|");
+    }
+    function hexToRgb(hex) {
+      const clean = hex.replace("#", "");
+      return {
+        r: parseInt(clean.slice(0, 2), 16),
+        g: parseInt(clean.slice(2, 4), 16),
+        b: parseInt(clean.slice(4, 6), 16)
+      };
+    }
+    function relativeLuminance(hex) {
+      const { r, g, b } = hexToRgb(hex);
+      const parts = [r, g, b].map(v => {
+        const c = v / 255;
+        return c <= .03928 ? c / 12.92 : Math.pow((c + .055) / 1.055, 2.4);
+      });
+      return parts[0] * .2126 + parts[1] * .7152 + parts[2] * .0722;
+    }
+    function contrastRatio(a, b) {
+      const l1 = relativeLuminance(a);
+      const l2 = relativeLuminance(b);
+      return (Math.max(l1, l2) + .05) / (Math.min(l1, l2) + .05);
+    }
+    function colorHealth(combo) {
+      const contrast = contrastRatio(combo.bg, combo.shape);
+      const bgLum = relativeLuminance(combo.bg);
+      const shapeLum = relativeLuminance(combo.shape);
+      return {
+        contrast,
+        bgLum,
+        shapeLum,
+        hasLargeBlack: bgLum < .055 || shapeLum < .025,
+        readable: contrast >= 1.55 && contrast <= 9.5
+      };
+    }
+    function rng(seed) {
+      let s = seed >>> 0;
+      return () => {
+        s += 0x6D2B79F5;
+        let t = s;
+        t = Math.imul(t ^ t >>> 15, t | 1);
+        t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+        return ((t ^ t >>> 14) >>> 0) / 4294967296;
+      };
+    }
+    const choice = (r, list) => list[Math.floor(r() * list.length) % list.length];
+    const esc = value => String(value).replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[char]));
+    const line = (x1, y1, x2, y2, color, width, extra = "") => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="${width}" stroke-linecap="square" ${extra}/>`;
+    const circle = (cx, cy, r, color, width, fill = "none", extra = "") => `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${color}" stroke-width="${width}" ${extra}/>`;
+    const rect = (x, y, w, h, fill, extra = "") => `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" ${extra}/>`;
+    const poly = (points, fill, extra = "") => `<polygon points="${points}" fill="${fill}" ${extra}/>`;
+    const path = (d, color, width, fill = "none", extra = "") => `<path d="${d}" fill="${fill}" stroke="${color}" stroke-width="${width}" stroke-linecap="square" stroke-linejoin="miter" ${extra}/>`;
+    const curve = (d, color, width, extra = "") => `<path d="${d}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" ${extra}/>`;
+
+    function moodBias(song) {
+      return {
+        "抒情": { focal: [1, 5, 6, 0], route: [1, 2, 4, 0], rhythm: [0, 4, 7] },
+        "流行": { focal: [2, 3, 6, 7], route: [3, 4, 6, 7], rhythm: [1, 3, 4, 5] },
+        "怀旧": { focal: [2, 8, 4, 3], route: [1, 7, 4], rhythm: [3, 4, 7] },
+        "民谣": { focal: [0, 4, 5, 2], route: [2, 3, 0], rhythm: [0, 6, 7] },
+        "摇滚": { focal: [3, 6, 8, 7], route: [5, 6, 3], rhythm: [1, 3, 5] },
+        "电子": { focal: [2, 7, 3, 6], route: [3, 5, 7], rhythm: [2, 3, 5, 6] },
+        "校园": { focal: [5, 4, 2, 0], route: [2, 3, 4], rhythm: [1, 4, 7] }
+      }[song.mood] || { focal: [0, 1, 2, 3], route: [0, 1, 2, 3], rhythm: [0, 1, 2, 3] };
+    }
+    function buildSignature(m) {
+      return `${m.field}-${m.focal}-${m.route}-${m.rhythm}-${m.anchor}`;
+    }
+    function buildSkeleton(m) {
+      return `${m.field}-${m.focal}-${m.route}`;
+    }
+    function coverModel(song, index, used) {
+      const h = hash(`${song.title}|${song.artist}|${song.bpm}|${song.key}|${song.mood}`);
+      const group = palettes[song.mood] || fallbackPalettes;
+      const r = rng(h + index * 701);
+      const bias = moodBias(song);
+      let model = {
+        h,
+        r,
+        palette: group[(h >>> 9) % group.length],
+        paletteIndex: (h >>> 9) % group.length,
+        field: (h >>> 3) % fields.length,
+        focal: bias.focal[(h >>> 7) % bias.focal.length],
+        route: bias.route[(h >>> 12) % bias.route.length],
+        rhythm: bias.rhythm[(h >>> 16) % bias.rhythm.length],
+        anchor: (h >>> 20) % 9,
+        crop: (h >>> 24) % 6,
+        mode: (h >>> 29) % 4,
+        density: song.bpm > 118 ? 3 : song.bpm < 78 ? 1 : 2,
+        weight: [3.4, 4.8, 6.2, 8][(h >>> 27) % 4]
+      };
+      let signature = buildSignature(model);
+      let skeleton = buildSkeleton(model);
+      let guard = 0;
+      while (used.has(skeleton) && guard < 16) {
+        model.field = (model.field + 2 + guard) % fields.length;
+        model.focal = (model.focal + 3 + guard) % focals.length;
+        model.route = (model.route + 2 + guard) % routes.length;
+        model.rhythm = (model.rhythm + 5) % rhythms.length;
+        model.anchor = (model.anchor + 4) % 9;
+        signature = buildSignature(model);
+        skeleton = buildSkeleton(model);
+        guard++;
+      }
+      used.add(skeleton);
+      if (used.size > 72) used.delete(used.values().next().value);
+      model.signature = signature;
+      model.skeleton = skeleton;
+      return model;
+    }
+
+    function baseLayer(p, id) {
+      return `
+        <defs>
+          <clipPath id="clip-${id}"><rect width="100" height="100" rx="0"/></clipPath>
+          <pattern id="grid-${id}" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M10 0H0V10" fill="none" stroke="${p[3]}" stroke-width=".28" opacity=".28"/>
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="${p[0]}"/>
+        <rect width="100" height="100" fill="url(#grid-${id})" opacity=".1"/>
+      `;
+    }
+    function shadeLayer(p) {
+      return `
+        <rect width="100" height="100" fill="none" stroke="rgba(255,255,255,.22)" stroke-width=".7"/>
+        <path d="M0 0H100L0 100Z" fill="rgba(255,255,255,.035)"/>
+        <path d="M100 20V100H20Z" fill="rgba(0,0,0,.07)"/>
+      `;
+    }
+
+    const anchors = [[18,18], [50,18], [82,18], [18,50], [50,50], [82,50], [18,82], [50,82], [82,82]];
+
+    function renderField(m) {
+      const p = m.palette;
+      const a = 20 + (m.h >>> 8) % 28;
+      const b = 56 + (m.h >>> 13) % 28;
+      return [
+        "",
+        `${rect(a, 0, 100 - a, 100, p[3], 'opacity=".2"')}`,
+        `${rect(0, b, 100, 100 - b, p[3], 'opacity=".32"')}`,
+        `${poly(`0,${a} ${100 - a},0 100,${100 - a} ${a},100`, p[3], 'opacity=".24"')}`,
+        `${rect(0, 0, b, a, p[4], 'opacity=".28"')}${rect(b, a, 100 - b, 100 - a, p[3], 'opacity=".22"')}`,
+        `${rect(a, a, b - a, b - a, p[3], 'opacity=".22"')}`,
+        `${rect(0, 0, a + 14, 100, p[3], 'opacity=".24"')}${rect(b, 0, 100 - b, 100, p[4], 'opacity=".18"')}`,
+        `${rect(0, 76 - a / 3, 100, 24 + a / 3, p[3], 'opacity=".34"')}`,
+        `${rect(0, 0, 100, 18 + a / 4, p[4], 'opacity=".18"')}${rect(0, 0, 18 + a / 5, 100, p[3], 'opacity=".16"')}`
+      ][m.field];
+    }
+
+    function renderFocal(m) {
+      const p = m.palette, w = m.weight;
+      const [ax, ay] = anchors[m.anchor];
+      const big = 24 + (m.h >>> 10) % 22;
+      const rot = [-18, -9, 0, 11, 19, 31][m.crop];
+      const color = m.crop % 2 ? p[1] : p[2];
+      const fill = m.crop % 3 === 0 ? p[3] : "none";
+      return [
+        "",
+        `${circle(ax + (m.crop - 2) * 5, ay + (m.crop % 2 ? 8 : -8), big, color, w + 2, fill, 'opacity=".92"')}`,
+        `${rect(ax - big * .72, ay - big * .72, big * 1.44, big * 1.44, "none", `stroke="${color}" stroke-width="${w}" transform="rotate(${rot} ${ax} ${ay})" opacity=".94"`)}${rect(ax - big * .36, ay - big * .36, big * .72, big * .72, "none", `stroke="${p[4]}" stroke-width="${w * .58}" transform="rotate(${rot} ${ax} ${ay})"`)} `,
+        `${rect(ax - big, ay - big * .55, big * 1.8, big * 1.1, color, `transform="rotate(${rot} ${ax} ${ay})" opacity=".95"`)}${rect(ax - big * .34, ay + big * .08, big * 1.15, big * .32, p[4], `transform="rotate(${rot} ${ax} ${ay})" opacity=".82"`)} `,
+        `${[0,1,2].map(i => rect(ax - 26 + i * 17, ay + 15 - i * 13, 20, 15 + i * 12, i % 2 ? p[4] : color, `opacity=".92"`)).join("")}`,
+        `${path(`M${ax - big} ${ay + big * .7} A${big} ${big} 0 0 1 ${ax + big} ${ay + big * .7}`, color, w + 2)}${path(`M${ax - big * .62} ${ay + big * .7} A${big * .62} ${big * .62} 0 0 1 ${ax + big * .62} ${ay + big * .7}`, p[4], w * .72)}`,
+        `${poly(`${ax - big},${ay - big} ${ax + big},${ay - big * .5} ${ax + big * .4},${ay + big} ${ax - big * .8},${ay + big * .5}`, color, `opacity=".9" transform="rotate(${rot} ${ax} ${ay})"`)}`,
+        `${line(ax - big, ay, ax + big, ay, color, w + 1)}${line(ax, ay - big, ax, ay + big, p[4], w + 1)}${circle(ax, ay, big * .38, p[2], w * .68, p[3])}`,
+        `${circle(ax, ay, big, color, w + 2)}${circle(ax, ay, big * .18, "none", 0, p[3])}${circle(ax, ay, big * .48, p[4], w * .45, "none", 'opacity=".72"')}`
+      ][m.focal];
+    }
+
+    function renderRoute(m) {
+      const p = m.palette, w = m.weight;
+      const y = 18 + (m.h >>> 6) % 64;
+      const x = 16 + (m.h >>> 11) % 68;
+      const bend = 18 + (m.h >>> 15) % 34;
+      return [
+        "",
+        `${curve(`M-8 ${y} C22 ${y - bend}, 45 ${y + bend}, 108 ${y - 6}`, p[4], w + 1)}`,
+        `${curve(`M-4 ${y} C20 ${y + 16}, 40 ${y - 16}, 60 ${y} S86 ${y + 12}, 108 ${y - 2}`, p[2], w + 1)}`,
+        `${path(`M8 ${y} H${x} V${100 - y} H92`, p[4], w)}`,
+        `${line(8, y, 92, y, p[2], w)}${line(8, y + 12, 92, y + 12, p[4], w * .58)}`,
+        `${[0,1,2].map(i => line(50, 50, 5 + i * 45, m.crop % 2 ? 105 : -5, i % 2 ? p[4] : p[2], w * .62, 'opacity=".68"')).join("")}`,
+        `${line(-6, 22 + m.crop * 8, 106, 8 + m.crop * 11, p[2], w + 1)}${line(8, 90 - m.crop * 9, 82, 100 - m.crop * 13, p[4], w * .7)}`,
+        `${rect(9, 9, 82, 82, "none", `stroke="${p[4]}" stroke-width="${w * .72}"`)}${path(`M21 21 H${76 - m.crop * 3} V${78 - m.crop * 4} H${30 + m.crop * 3}`, p[2], w * .62)}`
+      ][m.route];
+    }
+
+    function renderMark(m) {
+      const p = m.palette, w = m.weight;
+      const count = m.density === 3 ? 4 : 3;
+      const seed = (m.h >>> 4) % 12;
+      const corner = anchors[(m.anchor + 4) % anchors.length];
+      const x0 = Math.max(10, Math.min(72, corner[0] - 16));
+      const y0 = Math.max(10, Math.min(76, corner[1] - 10));
+      return [
+        "",
+        `${Array.from({ length: count }, (_, i) => rect(x0 + i * 9, y0 + 18 - ((i * 7 + seed) % 18), 4.2, 10 + ((i * 5 + seed) % 18), i % 2 ? p[1] : p[4], 'opacity=".88"')).join("")}`,
+        `${Array.from({ length: count }, (_, i) => circle(x0 + i * 12, y0 + (i % 2) * 12, 3.2, "none", 0, i % 2 ? p[4] : p[2], 'opacity=".88"')).join("")}`,
+        `${Array.from({ length: count }, (_, i) => line(x0 + i * 10, y0, x0 + i * 10, y0 + 9 + (i % 3) * 5, i % 2 ? p[4] : p[1], w * .45)).join("")}`,
+        `${rect(x0, y0, 26, 6.4, p[4], 'opacity=".9"')}${rect(x0 + 8, y0 + 13, 34, 6.4, p[2], 'opacity=".82"')}`,
+        `${rect(x0, y0, 5.8, 42, p[1], 'opacity=".78"')}${rect(x0 + 14, y0 + 8, 5.8, 28, p[4], 'opacity=".78"')}`,
+        `${rect(x0, y0 + 22, 16, 10, p[1], 'opacity=".88"')}${rect(x0 + 16, y0 + 11, 16, 21, p[4], 'opacity=".86"')}${rect(x0 + 32, y0, 16, 32, p[2], 'opacity=".82"')}`,
+        `${rect(x0, y0, 22, 8, p[4])}${rect(x0 + 30, y0 + 18, 18, 10, p[2])}`
+      ][m.rhythm];
+    }
+
+    function coverArt(m, id) {
+      const p = m.palette;
+      const busyFocal = [3, 4, 6, 7, 8].includes(m.focal);
+      const useRoute = m.mode === 1 || (!busyFocal && m.mode !== 2);
+      const useMark = m.mode === 2 || m.mode === 3 || (!useRoute && m.rhythm !== 0);
+      return `
+        ${baseLayer(p, id)}
+        ${renderField(m)}
+        ${renderFocal(m)}
+        ${useRoute ? renderRoute(m) : ""}
+        ${useMark ? renderMark(m) : ""}
+        ${shadeLayer(p)}
+      `;
+    }
+
+    const shapeFamilies = [
+      "Bauhaus Blocks", "Petal Glyph", "Arch Mark", "Pinwheel Cut", "Starburst",
+      "Triangle Stack", "Scallop Edge", "Step Symbol", "Pixel Tile", "Wave Crest"
+    ];
+    const assetShapes = [
+      "abstract1.svg","abstract10.svg","abstract11.svg","abstract12.svg","abstract13.svg","abstract2.svg","abstract3.svg","abstract4.svg","abstract5.svg","abstract6.svg","abstract7.svg","abstract8.svg",
+      "bar cross.svg","bar vertical3.svg","checker2.svg","circle split.svg","cross1.svg","hexagon.svg","icon_shapes_02.svg","icon_shapes_06.svg","icon_shapes_14.svg","icon_shapes_25.svg","icon_shapes_29.svg","icon_shapes_36.svg","icon_shapes_51.svg","icon_shapes_52.svg",
+      "leaf quad.svg","mem_dots_f_circle2.svg","mem_dots_f_square.svg","mem_dots_f_tri.svg","mem_semi_cir_cir.svg","mem_sq_cir.svg","mem_sq_sq.svg","mem_st_fill_circle.svg","mem_st_fill_square.svg","mem_st_fill_triangle.svg","mem_st_fill_triangle2.svg","mem_tri_cir.svg",
+      "quarter circle tri.svg","quarter circle2.svg","semicircle bottom2.svg","semicircle pair.svg","semicircle pair2.svg","semicircle side.svg","square outline.svg","square stretch.svg","triangle pair.svg","triangle pair2.svg","triangle quad2.svg"
+    ];
+    const referenceColors = [
+      "#00B451","#014886","#01563F","#5B208C","#5CD87B","#5F94E8","#6BCEF7","#844301","#A573DE","#A65913",
+      "#AE0061","#B3DD54","#B4172A","#B980D1","#BDBDBF","#C8F0EF","#CDB3FA","#D298FF","#D5C99F","#D5F168",
+      "#F07575","#F9BE00","#F9DF41","#FA9ECA","#FBB89D","#FD339F","#FE4437","#FEF33F","#FF9D30","#FFBDD9"
+    ];
+    const colorCombos = [
+      {bg:"#6F9ED6", shape:"#123F72", accent:"#1D5D9F", echo:"#9FC5EA", ink:"#123F72", blend:"normal"},
+      {bg:"#F49319", shape:"#A64516", accent:"#E84D1D", echo:"#F9BC34", ink:"#8B2B14", blend:"normal"},
+      {bg:"#63C3B2", shape:"#00767C", accent:"#0D8A87", echo:"#9EE2D4", ink:"#005E65", blend:"normal"},
+      {bg:"#BBD72B", shape:"#4C8C3B", accent:"#7BA527", echo:"#DDF15F", ink:"#3F702F", blend:"normal"},
+      {bg:"#0D8A87", shape:"#D8F3EA", accent:"#005E65", echo:"#55B5AA", ink:"#005E65", blend:"normal"},
+      {bg:"#E90B79", shape:"#8D064F", accent:"#6B0E62", echo:"#F86AAF", ink:"#6B0E62", blend:"normal"},
+      {bg:"#F7B913", shape:"#FFF5CD", accent:"#DFA318", echo:"#FFE16D", ink:"#8B5400", blend:"normal"},
+      {bg:"#EF4338", shape:"#8F1A2E", accent:"#C82D35", echo:"#FF8060", ink:"#781526", blend:"normal"},
+      {bg:"#F266A6", shape:"#7B286F", accent:"#FF7F45", echo:"#F9A6CA", ink:"#7B286F", blend:"normal"},
+      {bg:"#1E8F35", shape:"#D6F28B", accent:"#0B6427", echo:"#69BD48", ink:"#0B6427", blend:"normal"},
+      {bg:"#F8C21A", shape:"#E94B1F", accent:"#AF2F1B", echo:"#FFD95D", ink:"#7D2D12", blend:"normal"},
+      {bg:"#C8264A", shape:"#FFEBD8", accent:"#75143C", echo:"#F1686D", ink:"#75143C", blend:"normal"},
+      {bg:"#7E6FD8", shape:"#F6EFFF", accent:"#3D2E8F", echo:"#B9A7F4", ink:"#3D2E8F", blend:"normal"},
+      {bg:"#2F79D6", shape:"#E7F6FF", accent:"#0E4E9A", echo:"#82B8EF", ink:"#0E4E9A", blend:"normal"},
+      {bg:"#FF6E3A", shape:"#A43A1F", accent:"#F9B213", echo:"#FF9F72", ink:"#7A2D13", blend:"normal"},
+      {bg:"#A5D94F", shape:"#045D58", accent:"#2F8F45", echo:"#D7EF83", ink:"#045D58", blend:"normal"},
+      {bg:"#F6E6C5", shape:"#8A003C", accent:"#BC1D55", echo:"#D6B486", ink:"#8A003C", blend:"normal"},
+      {bg:"#8A003C", shape:"#FFF8E8", accent:"#C74462", echo:"#B51A52", ink:"#FFF8E8", blend:"normal"},
+      {bg:"#F37C22", shape:"#FFE8B1", accent:"#D4471F", echo:"#FBB24A", ink:"#7A2D13", blend:"normal"},
+      {bg:"#14A6A0", shape:"#064F64", accent:"#F4C430", echo:"#76D0C7", ink:"#064F64", blend:"normal"},
+      {bg:"#F04E98", shape:"#FFF0C9", accent:"#B0186A", echo:"#FF8EC6", ink:"#7E1451", blend:"normal"},
+      {bg:"#F9D83B", shape:"#B65D12", accent:"#EF4E3E", echo:"#F2B32A", ink:"#7D3F0D", blend:"normal"},
+      {bg:"#3FAE5F", shape:"#072F49", accent:"#1F7B43", echo:"#86CF77", ink:"#072F49", blend:"normal"},
+      {bg:"#D9262E", shape:"#FFF2D6", accent:"#8B1634", echo:"#F06B52", ink:"#8B1634", blend:"normal"}
+    ];
+
+    function shapeModel(song, index) {
+      const h = hash(`${song.title}|${song.artist}|${song.bpm}|${song.key}|${song.mood}`);
+      const group = palettes[song.mood] || fallbackPalettes;
+      return {
+        h,
+        family: index % shapeFamilies.length,
+        palette: group[(h >>> 9) % group.length],
+        paletteIndex: (h >>> 9) % group.length,
+        anchor: (h >>> 17) % 4,
+        rotate: [-18, -8, 0, 11, 22, 34][(h >>> 22) % 6],
+        scale: 0.86 + ((h >>> 27) % 18) / 100,
+        signature: `${index % shapeFamilies.length}-${(h >>> 9) % group.length}-${(h >>> 17) % 4}-${(h >>> 22) % 6}`
+      };
+    }
+
+    function assetPath(name) {
+      const encoded = name.split("/").map(part => encodeURIComponent(part)).join("/");
+      return location.protocol === "file:" ? `public/shape-assets/${encoded}` : `/shape-assets/${encoded}`;
+    }
+
+    function assetModel(song, index, used) {
+      const seedKey = stableCoverKey(song);
+      const h = hash(seedKey);
+      const group = palettes[song.mood] || fallbackPalettes;
+      const availableAssets = assetShapes.filter(asset => !disabledAssets.has(asset));
+      let assetIndex = h % availableAssets.length;
+      let guard = 0;
+      let comboIndex = (h >>> 8) % colorCombos.length;
+      let composition = `${assetIndex}-${comboIndex}-${(h >>> 16) % 5}`;
+      while (used.has(composition) && guard < 18) {
+        assetIndex = (assetIndex + 5 + guard * 3 + song.catalogIndex) % availableAssets.length;
+        comboIndex = (comboIndex + 3 + guard) % colorCombos.length;
+        composition = `${assetIndex}-${comboIndex}-${(h >>> 16) % 5}`;
+        guard++;
+      }
+      used.add(composition);
+      if (used.size > 54) used.delete(used.values().next().value);
+      const p = group[(h >>> 9) % group.length];
+      const combo = colorCombos[comboIndex];
+      const quality = colorHealth(combo);
+      const identity = hash(seedKey).toString(36).toUpperCase();
+      const shapeSize = [54,62,70,78,86][(h >>> 21) % 5];
+      const margin = Math.ceil(shapeSize / 2) + 3;
+      const safeXs = [margin, 50, 100 - margin];
+      const safeYs = [margin, 50, 100 - margin];
+      return {
+        h,
+        seedKey,
+        identity,
+        asset: availableAssets[assetIndex],
+        assetIndex,
+        comboIndex,
+        dupeShift: guard,
+        composition,
+        quality,
+        palette: p,
+        paletteIndex: (h >>> 9) % group.length,
+        style: [
+          `--bg:${combo.bg}`,
+          `--ink:${combo.ink}`,
+          `--accent:${combo.accent}`,
+          `--accent2:${combo.echo}`,
+          `--shape-color:${combo.shape}`,
+          `--echo-color:${combo.echo}`,
+          `--echo-blend:${combo.blend}`,
+          `--field-angle:${[0,45,90,135,180,225][(h >>> 4) % 6]}deg`,
+          `--glow-x:${[18,28,52,76,86][(h >>> 7) % 5]}%`,
+          `--glow-y:${[16,32,58,74,88][(h >>> 11) % 5]}%`,
+          `--shape-x:${safeXs[(h >>> 15) % safeXs.length]}%`,
+          `--shape-y:${safeYs[(h >>> 18) % safeYs.length]}%`,
+          `--shape-size:${shapeSize}%`,
+          `--shape-rotate:${[-24,-12,0,11,23,36][(h >>> 24) % 6]}deg`,
+          `--shape-opacity:${[.76,.84,.9,.96][(h >>> 27) % 4]}`,
+          `--echo-opacity:${[.12,.16,.2,.24][(h >>> 28) % 4]}`,
+          `--echo-rotate:${[12,18,24,30,-18][(h >>> 3) % 5]}deg`,
+          `--echo-scale:${[1.06,1.1,1.14,1.18][(h >>> 5) % 4]}`,
+          `--pattern-opacity:${[0,.12,.2,.28,.34][(h >>> 2) % 5]}`,
+          `--dot-size:${[5,7,9,12][(h >>> 12) % 4]}px`
+        ].join(";")
+      };
+    }
+
+    function softPaper(p, id) {
+      return `
+        <defs>
+          <clipPath id="clip-${id}"><rect width="100" height="100" rx="0"/></clipPath>
+          <pattern id="grain-${id}" width="6" height="6" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r=".34" fill="${p[3]}" opacity=".18"/>
+            <circle cx="4" cy="3" r=".24" fill="${p[4]}" opacity=".12"/>
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="${p[0]}"/>
+        <rect width="100" height="100" fill="url(#grain-${id})" opacity=".34"/>
+      `;
+    }
+
+    function scallopPath(y, radius, count, color) {
+      const step = 100 / count;
+      let d = `M0 ${y}`;
+      for (let i = 0; i < count; i++) {
+        const x = i * step + step / 2;
+        d += ` Q${x} ${y - radius} ${(i + 1) * step} ${y}`;
+      }
+      return `<path d="${d} V100 H0 Z" fill="${color}"/>`;
+    }
+
+    function shapeArt(m, id) {
+      const p = m.palette;
+      const a = m.anchor;
+      const rot = m.rotate;
+      const s = m.scale;
+      const common = `transform="rotate(${rot} 50 50) scale(${s})" transform-origin="50 50"`;
+      const family = [
+        () => `
+          ${softPaper(p, id)}
+          ${circle(22, 78, 42, p[1], 0, p[1])}
+          ${rect(42, 18, 46, 46, p[2], `transform="rotate(${rot} 65 41)"`)}
+          ${rect(13, 12, 38, 12, p[4])}
+          ${circle(77, 75, 14, p[3], 6)}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          <g ${common}>
+            ${circle(50, 28, 13, "none", 0, p[1])}
+            ${circle(72, 50, 13, "none", 0, p[1])}
+            ${circle(50, 72, 13, "none", 0, p[1])}
+            ${circle(28, 50, 13, "none", 0, p[1])}
+            ${circle(50, 50, 10, "none", 0, p[4])}
+          </g>
+          ${rect(13, 13, 26, 7, p[2])}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          ${path("M22 78 V48 C22 30 34 18 50 18 C66 18 78 30 78 48 V78", p[1], 9, "none", 'opacity=".96"')}
+          ${path("M36 78 V50 C36 40 42 34 50 34 C58 34 64 40 64 50 V78", p[4], 7, "none", 'opacity=".9"')}
+          ${rect(16, 82, 68, 7, p[2])}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          <g ${common}>
+            ${path("M50 50 L50 16 C68 18 78 30 78 48 Z", p[1], 0, p[1])}
+            ${path("M50 50 L84 50 C82 68 70 78 52 78 Z", p[4], 0, p[4])}
+            ${path("M50 50 L50 84 C32 82 22 70 22 52 Z", p[2], 0, p[2])}
+            ${path("M50 50 L16 50 C18 32 30 22 48 22 Z", p[3], 0, p[3])}
+          </g>
+          ${circle(50, 50, 8, "none", 0, p[0])}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          <g ${common}>
+            ${Array.from({ length: 12 }, (_, i) => {
+              const angle = i * 30;
+              return poly("50,11 55,39 50,50 45,39", i % 2 ? p[4] : p[1], `transform="rotate(${angle} 50 50)" opacity=".94"`);
+            }).join("")}
+            ${circle(50, 50, 10, "none", 0, p[2])}
+          </g>
+          ${rect(13, 80, 32, 7, p[3])}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          ${poly("12,88 44,10 78,88", p[1], `opacity=".95" transform="rotate(${rot} 50 50)"`)}
+          ${poly("52,16 94,68 38,78", p[2], 'opacity=".9"')}
+          ${poly("14,22 44,42 18,62", p[4], 'opacity=".86"')}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          ${scallopPath(56, 22, 4, p[1])}
+          ${scallopPath(72, 16, 5, p[4])}
+          ${rect(12, 18, 38, 9, p[2])}
+          ${circle(78, 28, 12, "none", 0, p[3])}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          <g ${common}>
+            ${rect(18, 66, 18, 18, p[1])}
+            ${rect(36, 48, 18, 18, p[4])}
+            ${rect(54, 30, 18, 18, p[1])}
+            ${rect(72, 12, 10, 18, p[2])}
+          </g>
+          ${path("M18 18 H48 V30 H30 V48 H18Z", p[3], 0, p[3], 'opacity=".78"')}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          ${rect(10, 10, 30, 30, p[1])}
+          ${rect(40, 10, 22, 22, p[4])}
+          ${rect(62, 10, 28, 50, p[2])}
+          ${rect(10, 40, 52, 50, p[3], 'opacity=".7"')}
+          ${rect(48, 62, 18, 18, p[4])}
+        `,
+        () => `
+          ${softPaper(p, id)}
+          ${curve("M-8 68 C12 42 28 42 48 68 S82 94 108 58", p[1], 16, 'opacity=".9"')}
+          ${curve("M-8 48 C12 22 28 22 48 48 S82 74 108 38", p[4], 11, 'opacity=".88"')}
+          ${rect(13, 13, 28, 8, p[2])}
+        `
+      ][m.family];
+      return `
+        ${family()}
+        ${shadeLayer(p)}
+      `;
+    }
+
+    function coverSvg(song, index, used) {
+      const model = assetModel(song, index, used);
+      const src = assetPath(model.asset);
+      const style = `${model.style};--asset-url:url(${src})`;
+      const label = model.asset.replace(/\.svg$/i, "");
+      return {
+        label,
+        palette: model.paletteIndex + 1,
+        signature: `${model.assetIndex}-${model.comboIndex}-${model.dupeShift}`,
+        identity: model.identity,
+        seedKey: model.seedKey,
+        quality: model.quality,
+        dupeShift: model.dupeShift,
+        composition: model.composition,
+        svg: `<div class="asset-cover" style="${esc(style)}" role="img" aria-label="${esc(song.title)} 的生成封面">
+          <span class="asset-shape echo" aria-hidden="true"></span>
+          <span class="asset-shape" aria-hidden="true"></span>
+        </div>`
+      };
+    }
+
+    let active = "全部";
+    let mode = "wall";
+    const filterNode = document.getElementById("filters");
+    const modeNode = document.getElementById("modes");
+    const healthNode = document.getElementById("health");
+    const grid = document.getElementById("grid");
+    const catalogUsed = new Set();
+    const coverCatalog = songs.map((song, index) => ({
+      song,
+      cover: coverSvg(song, index, catalogUsed)
+    }));
+    document.getElementById("assetCount").textContent = assetShapes.length - disabledAssets.size;
+    document.getElementById("systemVersion").textContent = `v${COVER_SYSTEM_VERSION}`;
+
+    function renderFilters() {
+      filterNode.innerHTML = filters.map(f => `<button class="${f === active ? "active" : ""}" data-filter="${f}">${f}</button>`).join("");
+      filterNode.querySelectorAll("button").forEach(btn => {
+        btn.onclick = () => {
+          active = btn.dataset.filter;
+          render();
+        };
+      });
+    }
+    function renderModes() {
+      modeNode.innerHTML = modes.map(item => `<button class="${item.id === mode ? "active" : ""}" data-mode="${item.id}">${item.label}</button>`).join("");
+      modeNode.querySelectorAll("button").forEach(btn => {
+        btn.onclick = () => {
+          mode = btn.dataset.mode;
+          render();
+        };
+      });
+    }
+    function qualityLabel(cover) {
+      const contrast = cover.quality.contrast.toFixed(1);
+      const readable = cover.quality.readable && !cover.quality.hasLargeBlack;
+      const dupe = cover.dupeShift ? `去重+${cover.dupeShift}` : "稳定";
+      return `<div class="quality">
+        <i class="${readable ? "ok" : "warn"}">${readable ? "通过" : "检查"}</i>
+        <i>对比 ${contrast}</i>
+        <i>${dupe}</i>
+      </div>`;
+    }
+    function renderHealth(list) {
+      const weak = list.filter(item => !item.cover.quality.readable || item.cover.quality.hasLargeBlack).length;
+      const shifted = list.filter(item => item.cover.dupeShift > 0).length;
+      const identities = new Set(list.map(item => item.cover.identity)).size;
+      healthNode.innerHTML = `
+        <span>稳定身份 ${identities}/${list.length}</span>
+        <span>去重调整 ${shifted}</span>
+        <span>待检查 ${weak}</span>
+        <span>种子含版本标签/谱面 ID</span>
+      `;
+    }
+    function render() {
+      renderFilters();
+      renderModes();
+      const fullList = active === "全部" ? coverCatalog : coverCatalog.filter(item => item.song.mood === active);
+      const list = mode === "review" ? fullList.slice(0, 10) : fullList;
+      document.getElementById("totalCount").textContent = list.length;
+      grid.className = `grid ${mode === "review" ? "review" : ""} ${mode === "small" ? "small" : ""}`;
+      renderHealth(list);
+      grid.innerHTML = list.map(({ song, cover: c }) => {
+        return `<article class="card">
+          <div class="cover">${c.svg}</div>
+          <div class="caption">
+            <strong>${esc(song.title)}</strong>
+            <span>${esc(song.artist)} · ${esc(song.versionTag)} · ${esc(song.difficulty)} · ${esc(song.mood)}</span>
+            ${qualityLabel(c)}
+            <code>${esc(c.label)} / ${esc(c.identity)} / ${esc(c.signature)}</code>
+          </div>
+        </article>`;
+      }).join("");
+    }
+    render();
+  </script>
+</body>
+</html>
