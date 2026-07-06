@@ -727,6 +727,10 @@
 
     function assetPath(name) {
       const encoded = name.split("/").map(part => encodeURIComponent(part)).join("/");
+      if (location.hostname.endsWith("github.io")) {
+        const projectBase = location.pathname.split("/").slice(0, 2).join("/");
+        return `${projectBase}/public/shape-assets/${encoded}`;
+      }
       return location.protocol === "file:" ? `public/shape-assets/${encoded}` : `/shape-assets/${encoded}`;
     }
 
